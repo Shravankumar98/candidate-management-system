@@ -1,0 +1,652 @@
+# Enterprise Full Stack Candidate Management System
+
+You are a Principal Software Architect and Senior Full Stack Engineer.
+
+Generate a COMPLETE production-ready enterprise-grade Applicant Tracking System (ATS) / Candidate Management System.
+
+The project must follow clean architecture, SOLID principles, modular development, reusable components, scalable backend design, proper API separation, secure authentication, and production-level coding standards.
+
+The application should look and behave like software used by real HR teams.
+
+Do NOT simplify anything.
+
+---
+
+# Goal
+
+Build a complete Full Stack Candidate Management System with React frontend and Node.js backend.
+
+The generated application should be deployable with minimal configuration.
+
+The project should be designed so another developer can maintain it easily.
+
+---
+
+# REQUIRED TECH STACK (STRICT)
+
+Frontend
+
+* React.js
+* React Router
+* Material UI
+* Axios
+* TanStack React Query
+* Context API (Authentication + Theme only)
+
+Backend
+
+* Node.js
+* Express.js
+* MongoDB Atlas
+* Mongoose
+* JWT Authentication
+* bcrypt
+* express-validator
+
+Do NOT use Firebase.
+
+Do NOT use Supabase.
+
+Do NOT use Prisma.
+
+Do NOT use Next.js.
+
+---
+
+# PROJECT STRUCTURE
+
+Use Feature-Based Architecture.
+
+Frontend
+
+src/
+
+app/
+
+router/
+
+theme/
+
+providers/
+
+components/
+
+common/
+
+layouts/
+
+ui/
+
+features/
+
+auth/
+
+dashboard/
+
+candidates/
+
+notes/
+
+kanban/
+
+analytics/
+
+profile/
+
+services/
+
+contexts/
+
+hooks/
+
+types/
+
+utils/
+
+constants/
+
+Backend
+
+server/
+
+config/
+
+controllers/
+
+routes/
+
+middlewares/
+
+services/
+
+repositories/
+
+models/
+
+validators/
+
+utils/
+
+constants/
+
+database/
+
+logs/
+
+uploads/
+
+tests/
+
+---
+
+# AUTHENTICATION
+
+JWT Authentication
+
+Register
+
+Login
+
+Logout
+
+Protected Routes
+
+Refresh-ready architecture
+
+Axios Interceptors
+
+Role Support
+
+Admin
+
+Recruiter
+
+Password Hashing
+
+Validation
+
+Token Expiration
+
+Proper Error Handling
+
+---
+
+# DASHBOARD
+
+Dashboard Cards
+
+Total Candidates
+
+Applied
+
+Screening
+
+Interview
+
+Selected
+
+Rejected
+
+Recent Candidates
+
+Recent Activity
+
+Quick Actions
+
+Analytics API
+
+Dashboard API
+
+---
+
+# CANDIDATE MANAGEMENT
+
+CRUD
+
+Candidate Fields
+
+Name
+
+Email
+
+Phone
+
+Skills (Array)
+
+Years of Experience
+
+Current Company
+
+Resume URL
+
+Status
+
+Created At
+
+Updated At
+
+Validation
+
+Pagination
+
+Searching
+
+Sorting
+
+Filtering
+
+Empty States
+
+Loading States
+
+---
+
+# CANDIDATE DETAILS
+
+Profile
+
+Status History
+
+Timeline
+
+Notes
+
+Resume
+
+Experience
+
+Company
+
+Skills
+
+Activity
+
+---
+
+# NOTES
+
+Create
+
+Edit
+
+Delete
+
+Timestamp
+
+Author
+
+Candidate Relationship
+
+Optimistic UI Updates
+
+---
+
+# KANBAN
+
+Columns
+
+Applied
+
+Screening
+
+Interview
+
+Selected
+
+Rejected
+
+Drag & Drop
+
+Optimistic Updates
+
+Persist to MongoDB
+
+Status History
+
+---
+
+# DATABASE
+
+MongoDB Atlas
+
+Collections
+
+Users
+
+Candidates
+
+Notes
+
+ActivityLogs
+
+Design proper references using ObjectId.
+
+Create indexes.
+
+Use timestamps.
+
+---
+
+# API
+
+Authentication
+
+POST /api/auth/register
+
+POST /api/auth/login
+
+Candidates
+
+GET /api/candidates
+
+GET /api/candidates/:id
+
+POST /api/candidates
+
+PUT /api/candidates/:id
+
+DELETE /api/candidates/:id
+
+Notes
+
+POST /api/candidates/:id/notes
+
+GET /api/candidates/:id/notes
+
+PUT /api/notes/:id
+
+DELETE /api/notes/:id
+
+Dashboard
+
+GET /api/dashboard
+
+Activity
+
+GET /api/activity
+
+---
+
+# BACKEND DESIGN
+
+Follow layered architecture.
+
+Routes
+
+↓
+
+Controllers
+
+↓
+
+Services
+
+↓
+
+Repositories
+
+↓
+
+MongoDB
+
+No business logic inside routes.
+
+Validation middleware.
+
+Global Error Handler.
+
+Custom Error Classes.
+
+Centralized Logger.
+
+Environment Variables.
+
+---
+
+# FRONTEND DESIGN
+
+Enterprise ATS.
+
+Design inspiration
+
+Linear
+
+Atlassian Jira
+
+Monday.com
+
+Notion
+
+Ashby ATS
+
+Greenhouse
+
+Color Palette
+
+Primary
+
+Deep Indigo
+
+Secondary
+
+Royal Blue
+
+Accent
+
+Emerald
+
+Neutral backgrounds
+
+White cards
+
+Rounded corners
+
+12px radius
+
+Soft shadows
+
+Minimal borders
+
+Professional typography
+
+No flashy gradients
+
+Support Dark Mode
+
+---
+
+# RESPONSIVENESS
+
+Desktop
+
+Tablet
+
+Mobile
+
+Responsive Sidebar
+
+Responsive Tables
+
+Responsive Forms
+
+Responsive Kanban
+
+---
+
+# REACT QUERY
+
+Use React Query for all API calls.
+
+Caching
+
+Invalidation
+
+Optimistic Updates
+
+Loading
+
+Retry
+
+Error Handling
+
+---
+
+# STATE MANAGEMENT
+
+Context API
+
+Authentication
+
+Theme
+
+Everything else should use React Query.
+
+---
+
+# FORM VALIDATION
+
+Client Validation
+
+Server Validation
+
+Reusable Validators
+
+Error Messages
+
+---
+
+# BONUS FEATURES
+
+Resume Upload UI
+
+Resume Parsing Architecture
+
+Email Notification Service Architecture
+
+Activity Logs
+
+Dark Mode
+
+Global Search
+
+Toast Notifications
+
+Confirmation Dialogs
+
+Skeleton Loaders
+
+Error Boundaries
+
+404 Page
+
+403 Page
+
+500 Page
+
+---
+
+# CODE QUALITY
+
+SOLID Principles
+
+DRY
+
+Reusable Components
+
+Reusable Hooks
+
+Reusable API Layer
+
+Reusable Dialogs
+
+Reusable Tables
+
+Reusable Inputs
+
+Reusable Status Chips
+
+Reusable Cards
+
+Reusable Layouts
+
+Proper Type Definitions
+
+Consistent Naming
+
+---
+
+# TESTING READY
+
+Prepare architecture for
+
+Jest
+
+React Testing Library
+
+Backend Unit Tests
+
+---
+
+# DEPLOYMENT
+
+Frontend
+
+Vercel
+
+Backend
+
+Render
+
+Database
+
+MongoDB Atlas
+
+Provide deployment configuration.
+
+---
+
+# README
+
+Generate a complete README including
+
+Project Overview
+
+Architecture
+
+Folder Structure
+
+Tech Stack
+
+Installation
+
+Environment Variables
+
+API Documentation
+
+Deployment
+
+Future Improvements
+
+---
+
+# IMPORTANT
+
+Generate a REAL application.
+
+Do not generate placeholder code.
+
+Implement proper business logic.
+
+Implement reusable architecture.
+
+Implement production-quality error handling.
+
+Implement scalable backend architecture.
+
+Every API should be fully connected to MongoDB.
+
+Every frontend page should already consume backend APIs.
+
+The application should require only environment variables to become production-ready.
+
+The final result should resemble an enterprise-grade Applicant Tracking System used by real recruitment companies.

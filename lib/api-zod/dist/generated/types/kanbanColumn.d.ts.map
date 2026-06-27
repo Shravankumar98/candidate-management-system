@@ -1,0 +1,1 @@
+{"version":3,"file":"kanbanColumn.d.ts","sourceRoot":"","sources":["../../../src/generated/types/kanbanColumn.ts"],"names":[],"mappings":"AAAA;;;;;;GAMG;AACH,OAAO,KAAK,EAAE,SAAS,EAAE,MAAM,aAAa,CAAC;AAC7C,OAAO,KAAK,EAAE,eAAe,EAAE,MAAM,mBAAmB,CAAC;AAEzD,MAAM,WAAW,YAAY;IAC3B,MAAM,EAAE,eAAe,CAAC;IACxB,UAAU,EAAE,SAAS,EAAE,CAAC;CACzB"}
