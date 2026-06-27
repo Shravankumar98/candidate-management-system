@@ -1,6 +1,4 @@
 import { Router, type IRouter } from "express";
-import { asc } from "drizzle-orm";
-import { db, candidatesTable } from "@workspace/db";
 import { requireAuth } from "../middlewares/requireAuth";
 
 const KANBAN_STATUSES = [

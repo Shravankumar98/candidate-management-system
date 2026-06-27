@@ -1,6 +1,4 @@
 import { Router, type IRouter } from "express";
-import { eq, ilike, and, or, desc, asc, count } from "drizzle-orm";
-import { db, candidatesTable, notesTable, activityLogsTable } from "@workspace/db";
 import { requireAuth } from "../middlewares/requireAuth";
 import {
   ListCandidatesQueryParams,

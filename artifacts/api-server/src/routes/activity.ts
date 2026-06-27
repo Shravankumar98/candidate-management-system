@@ -1,6 +1,4 @@
 import { Router, type IRouter } from "express";
-import { desc, eq } from "drizzle-orm";
-import { db, activityLogsTable } from "@workspace/db";
 import { requireAuth } from "../middlewares/requireAuth";
 import { ListActivityQueryParams } from "@workspace/api-zod";
 

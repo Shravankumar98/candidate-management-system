@@ -1,6 +1,4 @@
 import { Router, type IRouter } from "express";
-import { eq } from "drizzle-orm";
-import { db, notesTable } from "@workspace/db";
 import { requireAuth } from "../middlewares/requireAuth";
 import { UpdateNoteParams, UpdateNoteBody, DeleteNoteParams } from "@workspace/api-zod";
 

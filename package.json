@@ -17,7 +17,6 @@
     "typescript": "~5.9.3"
   },
   "dependencies": {
-    "dotenv": "^17.4.2",
-    "drizzle-orm": "catalog:"
+    "dotenv": "^17.4.2"
   }
 }
