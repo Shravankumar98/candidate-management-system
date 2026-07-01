@@ -66,13 +66,13 @@ export default function Dashboard() {
     },
     {
       label: "In Interview",
-      value: data.byStatus.interview,
+      value: data?.byStatus?.interview,
       icon: PhoneCall,
       color: "text-purple-500",
     },
     {
       label: "Offers Extended",
-      value: data.byStatus.offer,
+      value: data?.byStatus?.offer,
       icon: FileText,
       color: "text-orange-500",
     },
@@ -111,7 +111,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y divide-border/50">
-              {data.recentCandidates.length === 0 ? (
+              {data?.recentCandidates?.length === 0 ? (
                 <div className="p-6 text-center text-sm text-muted-foreground">
                   No candidates yet.{" "}
                   <Link href="/candidates/new" className="text-primary hover:underline">
@@ -119,7 +119,7 @@ export default function Dashboard() {
                   </Link>
                 </div>
               ) : (
-                data.recentCandidates.map((candidate) => (
+                data?.recentCandidates?.map((candidate) => (
                   <Link
                     key={candidate.id}
                     href={`/candidates/${candidate.id}`}
@@ -153,12 +153,12 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y divide-border/50">
-              {data.recentActivity.length === 0 ? (
+              {data?.recentActivity?.length === 0 ? (
                 <div className="p-6 text-center text-sm text-muted-foreground">
                   No activity yet.
                 </div>
               ) : (
-                data.recentActivity.map((activity) => (
+                data?.recentActivity?.map((activity) => (
                   <div key={activity.id} className="p-4 flex gap-4">
                     <div className="mt-1.5 flex-shrink-0">
                       <div className="w-2 h-2 rounded-full bg-primary ring-4 ring-primary/10" />

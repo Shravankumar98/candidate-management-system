@@ -1,5 +1,6 @@
 import { Router, type IRouter } from "express";
 import { requireAuth } from "../middlewares/requireAuth";
+import Candidate from "../models/Candidate";
 
 const KANBAN_STATUSES = [
   "applied",
@@ -12,38 +13,52 @@ const KANBAN_STATUSES = [
 
 const router: IRouter = Router();
 
-router.get("/kanban", requireAuth, async (_req, res): Promise<void> => {
-  const candidates = await db
-    .select()
-    .from(candidatesTable)
-    .orderBy(asc(candidatesTable.createdAt));
-
-  const grouped: Record<string, typeof candidates> = {
-    applied: [],
-    screening: [],
-    interview: [],
-    offer: [],
-    selected: [],
-    rejected: [],
+function serializeCandidate(candidate: any) {
+  return {
+    id: candidate._id.toString(),
+    name: candidate.name,
+    email: candidate.email,
+    phone: candidate.phone,
+    currentCompany: candidate.currentCompany,
+    position: candidate.position,
+    yearsOfExperience: candidate.yearsOfExperience,
+    resumeUrl: candidate.resumeUrl,
+    skills: candidate.skills ?? [],
+    status: candidate.status,
+    createdAt: candidate.createdAt.toISOString(),
+    updatedAt: candidate.updatedAt.toISOString(),
   };
+}
 
-  for (const c of candidates) {
-    if (c.status in grouped) {
-      grouped[c.status].push(c);
+router.get("/kanban", requireAuth, async (_req, res): Promise<void> => {
+  try {
+    const candidates = await Candidate.find().sort({ createdAt: 1 });
+
+    const grouped: Record<string, any[]> = {
+      applied: [],
+      screening: [],
+      interview: [],
+      offer: [],
+      selected: [],
+      rejected: [],
+    };
+
+    for (const candidate of candidates) {
+      if (candidate.status in grouped) {
+        grouped[candidate.status].push(serializeCandidate(candidate));
+      }
     }
+
+    const columns = KANBAN_STATUSES.map((status) => ({
+      status,
+      candidates: grouped[status],
+    }));
+
+    res.json({ columns });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to load kanban board" });
   }
-
-  const columns = KANBAN_STATUSES.map((status) => ({
-    status,
-    candidates: grouped[status].map((c) => ({
-      ...c,
-      skills: c.skills ?? [],
-      createdAt: c.createdAt.toISOString(),
-      updatedAt: c.updatedAt.toISOString(),
-    })),
-  }));
-
-  res.json({ columns });
 });
 
 export default router;

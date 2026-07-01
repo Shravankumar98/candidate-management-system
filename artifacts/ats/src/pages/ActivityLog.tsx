@@ -40,14 +40,14 @@ export default function ActivityLog() {
                     <TableCell><Skeleton className="h-8 w-8 ml-auto rounded" /></TableCell>
                   </TableRow>
                 ))
-              ) : !activities || activities.length === 0 ? (
+              ) : !activities || activities.length === 0 || !Array.isArray(activities) ? (
                 <TableRow>
                   <TableCell colSpan={5} className="h-40 text-center text-muted-foreground">
                     No activity found.
                   </TableCell>
                 </TableRow>
               ) : (
-                activities.map((activity) => (
+                activities?.map((activity) => (
                   <TableRow key={activity.id} className="hover:bg-muted/30">
                     <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
                       {format(new Date(activity.createdAt), "MMM d, yyyy h:mm a")}

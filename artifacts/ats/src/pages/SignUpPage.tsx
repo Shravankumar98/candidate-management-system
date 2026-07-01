@@ -13,7 +13,7 @@ import {
 import { Link } from "wouter";
 import { setStoredAuthToken, setStoredAuthUser } from "@/lib/auth-storage";
 
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function SignUpPage() {
   const [, setLocation] = useLocation();
@@ -29,7 +29,7 @@ export default function SignUpPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${basePath}/api/auth/register`, {
+      const response = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name, email, password }),

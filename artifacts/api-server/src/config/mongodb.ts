@@ -1,9 +1,23 @@
 import mongoose from "mongoose";
+import { logger } from "../lib/logger";
 
 export async function connectDB(): Promise<void> {
-  if (!process.env.DATABASE_URL) {
-    throw new Error("DATABASE_URL must be set for MongoDB connection.");
+  const mongoUri = process.env.MONGO_URI || process.env.DATABASE_URL;
+
+  if (!mongoUri) {
+    throw new Error(
+      "MONGO_URI (or DATABASE_URL) environment variable is required.",
+    );
   }
 
-  await mongoose.connect(process.env.DATABASE_URL);
+  mongoose.set("strictQuery", true);
+
+  try {
+    await mongoose.connect(mongoUri);
+
+    logger.info("MongoDB connected successfully.");
+  } catch (error) {
+    logger.error({ error }, "Failed to connect to MongoDB.");
+    process.exit(1);
+  }
 }

@@ -17,4 +17,4 @@ const NoteSchema = new Schema<INote>(
   { timestamps: true },
 );
 
-export const Note = mongoose.model<INote>("Note", NoteSchema);
+export default mongoose.model<INote>("Note", NoteSchema);

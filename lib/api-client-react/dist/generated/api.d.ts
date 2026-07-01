@@ -1,7 +1,7 @@
-import type { QueryKey, UseMutationOptions, UseMutationResult, UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
-import type { ActivityLog, Candidate, CandidateDetail, CandidateInput, CandidateList, CandidateStatusUpdate, CandidateUpdate, DashboardStats, ErrorResponse, HealthStatus, KanbanBoard, ListActivityParams, ListCandidatesParams, Note, NoteInput, NoteUpdate } from './api.schemas';
-import { customFetch } from '../custom-fetch';
-import type { ErrorType, BodyType } from '../custom-fetch';
+import type { QueryKey, UseMutationOptions, UseMutationResult, UseQueryOptions, UseQueryResult } from "@tanstack/react-query";
+import type { ActivityLog, Candidate, CandidateDetail, CandidateInput, CandidateList, CandidateStatusUpdate, CandidateUpdate, DashboardStats, ErrorResponse, HealthStatus, KanbanBoard, ListActivityParams, ListCandidatesParams, Note, NoteInput, NoteUpdate } from "./api.schemas";
+import { customFetch } from "../custom-fetch";
+import type { ErrorType, BodyType } from "../custom-fetch";
 type AwaitedInput<T> = PromiseLike<T> | T;
 type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
@@ -69,8 +69,8 @@ export type CreateCandidateMutationResult = NonNullable<Awaited<ReturnType<typeo
 export type CreateCandidateMutationBody = BodyType<CandidateInput>;
 export type CreateCandidateMutationError = ErrorType<ErrorResponse>;
 /**
-* @summary Create a candidate
-*/
+ * @summary Create a candidate
+ */
 export declare const useCreateCandidate: <TError = ErrorType<ErrorResponse>, TContext = unknown>(options?: {
     mutation?: UseMutationOptions<Awaited<ReturnType<typeof createCandidate>>, TError, {
         data: BodyType<CandidateInput>;
@@ -79,13 +79,13 @@ export declare const useCreateCandidate: <TError = ErrorType<ErrorResponse>, TCo
 }) => UseMutationResult<Awaited<ReturnType<typeof createCandidate>>, TError, {
     data: BodyType<CandidateInput>;
 }, TContext>;
-export declare const getGetCandidateUrl: (id: number) => string;
+export declare const getGetCandidateUrl: (id: string) => string;
 /**
  * @summary Get a candidate by ID
  */
-export declare const getCandidate: (id: number, options?: RequestInit) => Promise<CandidateDetail>;
-export declare const getGetCandidateQueryKey: (id: number) => readonly [`/api/candidates/${number}`];
-export declare const getGetCandidateQueryOptions: <TData = Awaited<ReturnType<typeof getCandidate>>, TError = ErrorType<ErrorResponse>>(id: number, options?: {
+export declare const getCandidate: (id: string, options?: RequestInit) => Promise<CandidateDetail>;
+export declare const getGetCandidateQueryKey: (id: string) => readonly [`/api/candidates/${string}`];
+export declare const getGetCandidateQueryOptions: <TData = Awaited<ReturnType<typeof getCandidate>>, TError = ErrorType<ErrorResponse>>(id: string, options?: {
     query?: UseQueryOptions<Awaited<ReturnType<typeof getCandidate>>, TError, TData>;
     request?: SecondParameter<typeof customFetch>;
 }) => UseQueryOptions<Awaited<ReturnType<typeof getCandidate>>, TError, TData> & {
@@ -96,107 +96,107 @@ export type GetCandidateQueryError = ErrorType<ErrorResponse>;
 /**
  * @summary Get a candidate by ID
  */
-export declare function useGetCandidate<TData = Awaited<ReturnType<typeof getCandidate>>, TError = ErrorType<ErrorResponse>>(id: number, options?: {
+export declare function useGetCandidate<TData = Awaited<ReturnType<typeof getCandidate>>, TError = ErrorType<ErrorResponse>>(id: string, options?: {
     query?: UseQueryOptions<Awaited<ReturnType<typeof getCandidate>>, TError, TData>;
     request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
 };
-export declare const getUpdateCandidateUrl: (id: number) => string;
+export declare const getUpdateCandidateUrl: (id: string) => string;
 /**
  * @summary Update a candidate
  */
-export declare const updateCandidate: (id: number, candidateUpdate: CandidateUpdate, options?: RequestInit) => Promise<Candidate>;
+export declare const updateCandidate: (id: string, candidateUpdate: CandidateUpdate, options?: RequestInit) => Promise<Candidate>;
 export declare const getUpdateCandidateMutationOptions: <TError = ErrorType<ErrorResponse>, TContext = unknown>(options?: {
     mutation?: UseMutationOptions<Awaited<ReturnType<typeof updateCandidate>>, TError, {
-        id: number;
+        id: string;
         data: BodyType<CandidateUpdate>;
     }, TContext>;
     request?: SecondParameter<typeof customFetch>;
 }) => UseMutationOptions<Awaited<ReturnType<typeof updateCandidate>>, TError, {
-    id: number;
+    id: string;
     data: BodyType<CandidateUpdate>;
 }, TContext>;
 export type UpdateCandidateMutationResult = NonNullable<Awaited<ReturnType<typeof updateCandidate>>>;
 export type UpdateCandidateMutationBody = BodyType<CandidateUpdate>;
 export type UpdateCandidateMutationError = ErrorType<ErrorResponse>;
 /**
-* @summary Update a candidate
-*/
+ * @summary Update a candidate
+ */
 export declare const useUpdateCandidate: <TError = ErrorType<ErrorResponse>, TContext = unknown>(options?: {
     mutation?: UseMutationOptions<Awaited<ReturnType<typeof updateCandidate>>, TError, {
-        id: number;
+        id: string;
         data: BodyType<CandidateUpdate>;
     }, TContext>;
     request?: SecondParameter<typeof customFetch>;
 }) => UseMutationResult<Awaited<ReturnType<typeof updateCandidate>>, TError, {
-    id: number;
+    id: string;
     data: BodyType<CandidateUpdate>;
 }, TContext>;
-export declare const getDeleteCandidateUrl: (id: number) => string;
+export declare const getDeleteCandidateUrl: (id: string) => string;
 /**
  * @summary Delete a candidate
  */
-export declare const deleteCandidate: (id: number, options?: RequestInit) => Promise<void>;
+export declare const deleteCandidate: (id: string, options?: RequestInit) => Promise<void>;
 export declare const getDeleteCandidateMutationOptions: <TError = ErrorType<unknown>, TContext = unknown>(options?: {
     mutation?: UseMutationOptions<Awaited<ReturnType<typeof deleteCandidate>>, TError, {
-        id: number;
+        id: string;
     }, TContext>;
     request?: SecondParameter<typeof customFetch>;
 }) => UseMutationOptions<Awaited<ReturnType<typeof deleteCandidate>>, TError, {
-    id: number;
+    id: string;
 }, TContext>;
 export type DeleteCandidateMutationResult = NonNullable<Awaited<ReturnType<typeof deleteCandidate>>>;
 export type DeleteCandidateMutationError = ErrorType<unknown>;
 /**
-* @summary Delete a candidate
-*/
+ * @summary Delete a candidate
+ */
 export declare const useDeleteCandidate: <TError = ErrorType<unknown>, TContext = unknown>(options?: {
     mutation?: UseMutationOptions<Awaited<ReturnType<typeof deleteCandidate>>, TError, {
-        id: number;
+        id: string;
     }, TContext>;
     request?: SecondParameter<typeof customFetch>;
 }) => UseMutationResult<Awaited<ReturnType<typeof deleteCandidate>>, TError, {
-    id: number;
+    id: string;
 }, TContext>;
-export declare const getUpdateCandidateStatusUrl: (id: number) => string;
+export declare const getUpdateCandidateStatusUrl: (id: string) => string;
 /**
  * @summary Update candidate status (Kanban move)
  */
-export declare const updateCandidateStatus: (id: number, candidateStatusUpdate: CandidateStatusUpdate, options?: RequestInit) => Promise<Candidate>;
+export declare const updateCandidateStatus: (id: string, candidateStatusUpdate: CandidateStatusUpdate, options?: RequestInit) => Promise<Candidate>;
 export declare const getUpdateCandidateStatusMutationOptions: <TError = ErrorType<ErrorResponse>, TContext = unknown>(options?: {
     mutation?: UseMutationOptions<Awaited<ReturnType<typeof updateCandidateStatus>>, TError, {
-        id: number;
+        id: string;
         data: BodyType<CandidateStatusUpdate>;
     }, TContext>;
     request?: SecondParameter<typeof customFetch>;
 }) => UseMutationOptions<Awaited<ReturnType<typeof updateCandidateStatus>>, TError, {
-    id: number;
+    id: string;
     data: BodyType<CandidateStatusUpdate>;
 }, TContext>;
 export type UpdateCandidateStatusMutationResult = NonNullable<Awaited<ReturnType<typeof updateCandidateStatus>>>;
 export type UpdateCandidateStatusMutationBody = BodyType<CandidateStatusUpdate>;
 export type UpdateCandidateStatusMutationError = ErrorType<ErrorResponse>;
 /**
-* @summary Update candidate status (Kanban move)
-*/
+ * @summary Update candidate status (Kanban move)
+ */
 export declare const useUpdateCandidateStatus: <TError = ErrorType<ErrorResponse>, TContext = unknown>(options?: {
     mutation?: UseMutationOptions<Awaited<ReturnType<typeof updateCandidateStatus>>, TError, {
-        id: number;
+        id: string;
         data: BodyType<CandidateStatusUpdate>;
     }, TContext>;
     request?: SecondParameter<typeof customFetch>;
 }) => UseMutationResult<Awaited<ReturnType<typeof updateCandidateStatus>>, TError, {
-    id: number;
+    id: string;
     data: BodyType<CandidateStatusUpdate>;
 }, TContext>;
-export declare const getListCandidateNotesUrl: (candidateId: number) => string;
+export declare const getListCandidateNotesUrl: (candidateId: string) => string;
 /**
  * @summary List notes for a candidate
  */
-export declare const listCandidateNotes: (candidateId: number, options?: RequestInit) => Promise<Note[]>;
-export declare const getListCandidateNotesQueryKey: (candidateId: number) => readonly [`/api/candidates/${number}/notes`];
-export declare const getListCandidateNotesQueryOptions: <TData = Awaited<ReturnType<typeof listCandidateNotes>>, TError = ErrorType<unknown>>(candidateId: number, options?: {
+export declare const listCandidateNotes: (candidateId: string, options?: RequestInit) => Promise<Note[]>;
+export declare const getListCandidateNotesQueryKey: (candidateId: string) => readonly [`/api/candidates/${string}/notes`];
+export declare const getListCandidateNotesQueryOptions: <TData = Awaited<ReturnType<typeof listCandidateNotes>>, TError = ErrorType<unknown>>(candidateId: string, options?: {
     query?: UseQueryOptions<Awaited<ReturnType<typeof listCandidateNotes>>, TError, TData>;
     request?: SecondParameter<typeof customFetch>;
 }) => UseQueryOptions<Awaited<ReturnType<typeof listCandidateNotes>>, TError, TData> & {
@@ -207,99 +207,99 @@ export type ListCandidateNotesQueryError = ErrorType<unknown>;
 /**
  * @summary List notes for a candidate
  */
-export declare function useListCandidateNotes<TData = Awaited<ReturnType<typeof listCandidateNotes>>, TError = ErrorType<unknown>>(candidateId: number, options?: {
+export declare function useListCandidateNotes<TData = Awaited<ReturnType<typeof listCandidateNotes>>, TError = ErrorType<unknown>>(candidateId: string, options?: {
     query?: UseQueryOptions<Awaited<ReturnType<typeof listCandidateNotes>>, TError, TData>;
     request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
 };
-export declare const getCreateCandidateNoteUrl: (candidateId: number) => string;
+export declare const getCreateCandidateNoteUrl: (candidateId: string) => string;
 /**
  * @summary Create a note for a candidate
  */
-export declare const createCandidateNote: (candidateId: number, noteInput: NoteInput, options?: RequestInit) => Promise<Note>;
+export declare const createCandidateNote: (candidateId: string, noteInput: NoteInput, options?: RequestInit) => Promise<Note>;
 export declare const getCreateCandidateNoteMutationOptions: <TError = ErrorType<unknown>, TContext = unknown>(options?: {
     mutation?: UseMutationOptions<Awaited<ReturnType<typeof createCandidateNote>>, TError, {
-        candidateId: number;
+        candidateId: string;
         data: BodyType<NoteInput>;
     }, TContext>;
     request?: SecondParameter<typeof customFetch>;
 }) => UseMutationOptions<Awaited<ReturnType<typeof createCandidateNote>>, TError, {
-    candidateId: number;
+    candidateId: string;
     data: BodyType<NoteInput>;
 }, TContext>;
 export type CreateCandidateNoteMutationResult = NonNullable<Awaited<ReturnType<typeof createCandidateNote>>>;
 export type CreateCandidateNoteMutationBody = BodyType<NoteInput>;
 export type CreateCandidateNoteMutationError = ErrorType<unknown>;
 /**
-* @summary Create a note for a candidate
-*/
+ * @summary Create a note for a candidate
+ */
 export declare const useCreateCandidateNote: <TError = ErrorType<unknown>, TContext = unknown>(options?: {
     mutation?: UseMutationOptions<Awaited<ReturnType<typeof createCandidateNote>>, TError, {
-        candidateId: number;
+        candidateId: string;
         data: BodyType<NoteInput>;
     }, TContext>;
     request?: SecondParameter<typeof customFetch>;
 }) => UseMutationResult<Awaited<ReturnType<typeof createCandidateNote>>, TError, {
-    candidateId: number;
+    candidateId: string;
     data: BodyType<NoteInput>;
 }, TContext>;
-export declare const getUpdateNoteUrl: (id: number) => string;
+export declare const getUpdateNoteUrl: (id: string) => string;
 /**
  * @summary Update a note
  */
-export declare const updateNote: (id: number, noteUpdate: NoteUpdate, options?: RequestInit) => Promise<Note>;
+export declare const updateNote: (id: string, noteUpdate: NoteUpdate, options?: RequestInit) => Promise<Note>;
 export declare const getUpdateNoteMutationOptions: <TError = ErrorType<ErrorResponse>, TContext = unknown>(options?: {
     mutation?: UseMutationOptions<Awaited<ReturnType<typeof updateNote>>, TError, {
-        id: number;
+        id: string;
         data: BodyType<NoteUpdate>;
     }, TContext>;
     request?: SecondParameter<typeof customFetch>;
 }) => UseMutationOptions<Awaited<ReturnType<typeof updateNote>>, TError, {
-    id: number;
+    id: string;
     data: BodyType<NoteUpdate>;
 }, TContext>;
 export type UpdateNoteMutationResult = NonNullable<Awaited<ReturnType<typeof updateNote>>>;
 export type UpdateNoteMutationBody = BodyType<NoteUpdate>;
 export type UpdateNoteMutationError = ErrorType<ErrorResponse>;
 /**
-* @summary Update a note
-*/
+ * @summary Update a note
+ */
 export declare const useUpdateNote: <TError = ErrorType<ErrorResponse>, TContext = unknown>(options?: {
     mutation?: UseMutationOptions<Awaited<ReturnType<typeof updateNote>>, TError, {
-        id: number;
+        id: string;
         data: BodyType<NoteUpdate>;
     }, TContext>;
     request?: SecondParameter<typeof customFetch>;
 }) => UseMutationResult<Awaited<ReturnType<typeof updateNote>>, TError, {
-    id: number;
+    id: string;
     data: BodyType<NoteUpdate>;
 }, TContext>;
-export declare const getDeleteNoteUrl: (id: number) => string;
+export declare const getDeleteNoteUrl: (id: string) => string;
 /**
  * @summary Delete a note
  */
-export declare const deleteNote: (id: number, options?: RequestInit) => Promise<void>;
+export declare const deleteNote: (id: string, options?: RequestInit) => Promise<void>;
 export declare const getDeleteNoteMutationOptions: <TError = ErrorType<unknown>, TContext = unknown>(options?: {
     mutation?: UseMutationOptions<Awaited<ReturnType<typeof deleteNote>>, TError, {
-        id: number;
+        id: string;
     }, TContext>;
     request?: SecondParameter<typeof customFetch>;
 }) => UseMutationOptions<Awaited<ReturnType<typeof deleteNote>>, TError, {
-    id: number;
+    id: string;
 }, TContext>;
 export type DeleteNoteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteNote>>>;
 export type DeleteNoteMutationError = ErrorType<unknown>;
 /**
-* @summary Delete a note
-*/
+ * @summary Delete a note
+ */
 export declare const useDeleteNote: <TError = ErrorType<unknown>, TContext = unknown>(options?: {
     mutation?: UseMutationOptions<Awaited<ReturnType<typeof deleteNote>>, TError, {
-        id: number;
+        id: string;
     }, TContext>;
     request?: SecondParameter<typeof customFetch>;
 }) => UseMutationResult<Awaited<ReturnType<typeof deleteNote>>, TError, {
-    id: number;
+    id: string;
 }, TContext>;
 export declare const getGetDashboardUrl: () => string;
 /**

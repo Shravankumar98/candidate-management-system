@@ -1,44 +1,88 @@
 import { Router, type IRouter } from "express";
 import { requireAuth } from "../middlewares/requireAuth";
 
+import Candidate from "../models/Candidate";
+import Activity from "../models/Activity";
+
 const router: IRouter = Router();
 
 router.get("/dashboard", requireAuth, async (_req, res): Promise<void> => {
-  const [allCandidates, recentCandidates, recentActivity] = await Promise.all([
-    db.select({ status: candidatesTable.status, id: candidatesTable.id }).from(candidatesTable),
-    db.select().from(candidatesTable).orderBy(desc(candidatesTable.createdAt)).limit(5),
-    db.select().from(activityLogsTable).orderBy(desc(activityLogsTable.createdAt)).limit(10),
-  ]);
+  try {
+    const [allCandidates, recentCandidates, recentActivity] = await Promise.all(
+      [
+        Candidate.find().select("status"),
 
-  const byStatus: Record<string, number> = {
-    applied: 0,
-    screening: 0,
-    interview: 0,
-    offer: 0,
-    selected: 0,
-    rejected: 0,
-  };
+        Candidate.find().sort({ createdAt: -1 }).limit(5),
 
-  for (const c of allCandidates) {
-    if (c.status in byStatus) {
-      byStatus[c.status]++;
+        Activity.find().sort({ createdAt: -1 }).limit(10),
+      ],
+    );
+
+    const byStatus = {
+      applied: 0,
+      screening: 0,
+      interview: 0,
+      offer: 0,
+      selected: 0,
+      rejected: 0,
+    };
+
+    for (const candidate of allCandidates) {
+      if (candidate.status in byStatus) {
+        byStatus[candidate.status as keyof typeof byStatus]++;
+      }
     }
-  }
 
-  res.json({
-    totalCandidates: allCandidates.length,
-    byStatus,
-    recentCandidates: recentCandidates.map((c) => ({
-      ...c,
-      skills: c.skills ?? [],
-      createdAt: c.createdAt.toISOString(),
-      updatedAt: c.updatedAt.toISOString(),
-    })),
-    recentActivity: recentActivity.map((a) => ({
-      ...a,
-      createdAt: a.createdAt.toISOString(),
-    })),
-  });
+    res.json({
+      totalCandidates: allCandidates.length,
+
+      byStatus,
+
+      recentCandidates: recentCandidates.map((candidate) => ({
+        id: candidate._id.toString(),
+
+        name: candidate.name,
+        email: candidate.email,
+        phone: candidate.phone,
+
+        currentCompany: candidate.currentCompany,
+        position: candidate.position,
+
+        yearsOfExperience: candidate.yearsOfExperience,
+
+        resumeUrl: candidate.resumeUrl,
+
+        skills: candidate.skills ?? [],
+
+        status: candidate.status,
+
+        createdAt: candidate.createdAt.toISOString(),
+        updatedAt: candidate.updatedAt.toISOString(),
+      })),
+
+      recentActivity: recentActivity.map((activity) => ({
+        id: activity._id.toString(),
+
+        candidateId: activity.candidateId.toString(),
+
+        candidateName: activity.candidateName,
+
+        action: activity.action,
+
+        oldValue: activity.oldValue,
+
+        newValue: activity.newValue,
+
+        createdAt: activity.createdAt.toISOString(),
+      })),
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: "Failed to load dashboard",
+    });
+  }
 });
 
 export default router;

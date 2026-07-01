@@ -55,7 +55,8 @@ import { Link, useLocation } from "wouter";
 
 export default function CandidateDetail() {
   const { id } = useParams();
-  const candidateId = parseInt(id || "0", 10);
+  
+  const candidateId = id ?? "";
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [, setLocation] = useLocation();

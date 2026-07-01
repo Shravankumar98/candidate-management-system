@@ -1,5 +1,6 @@
 import { Router, type IRouter } from "express";
 import { requireAuth } from "../middlewares/requireAuth";
+
 import {
   ListCandidatesQueryParams,
   CreateCandidateBody,
@@ -14,83 +15,152 @@ import {
   CreateCandidateNoteBody,
 } from "@workspace/api-zod";
 
+import Candidate from "../models/Candidate";
+import Note from "../models/Note";
+import Activity from "../models/Activity";
+
 const router: IRouter = Router();
+
+/* -------------------------------------------------------------------------- */
+/*                                SERIALIZERS                                 */
+/* -------------------------------------------------------------------------- */
+
+function serializeCandidate(candidate: any) {
+  return {
+    id: candidate._id.toString(),
+    name: candidate.name,
+    email: candidate.email,
+    phone: candidate.phone,
+    currentCompany: candidate.currentCompany,
+    position: candidate.position,
+    yearsOfExperience: candidate.yearsOfExperience,
+    resumeUrl: candidate.resumeUrl,
+    skills: candidate.skills ?? [],
+    status: candidate.status,
+    createdAt: candidate.createdAt.toISOString(),
+    updatedAt: candidate.updatedAt.toISOString(),
+  };
+}
+
+function serializeNote(note: any) {
+  return {
+    id: note._id.toString(),
+    candidateId: note.candidateId.toString(),
+    content: note.content,
+    authorName: note.authorName,
+    createdAt: note.createdAt.toISOString(),
+    updatedAt: note.updatedAt.toISOString(),
+  };
+}
+
+function serializeActivity(activity: any) {
+  return {
+    id: activity._id.toString(),
+    candidateId: activity.candidateId.toString(),
+    candidateName: activity.candidateName,
+    action: activity.action,
+    oldValue: activity.oldValue,
+    newValue: activity.newValue,
+    createdAt: activity.createdAt.toISOString(),
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              GET CANDIDATES                                */
+/* -------------------------------------------------------------------------- */
 
 router.get("/candidates", requireAuth, async (req, res): Promise<void> => {
   const parsed = ListCandidatesQueryParams.safeParse(req.query);
+
   if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.message });
+    res.status(400).json({
+      error: parsed.error.message,
+    });
     return;
   }
 
-  const { page, limit, search, status, sortBy, sortOrder } = parsed.data;
-  const offset = ((page ?? 1) - 1) * (limit ?? 20);
-  const pageLimit = limit ?? 20;
+  const {
+    page = 1,
+    limit = 20,
+    search,
+    status,
+    sortBy,
+    sortOrder,
+  } = parsed.data;
 
-  const conditions = [];
+  const query: any = {};
+
   if (search) {
-    conditions.push(
-      or(
-        ilike(candidatesTable.name, `%${search}%`),
-        ilike(candidatesTable.email, `%${search}%`),
-        ilike(candidatesTable.currentCompany, `%${search}%`),
-        ilike(candidatesTable.position, `%${search}%`),
-      ),
-    );
+    query.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { email: { $regex: search, $options: "i" } },
+      { currentCompany: { $regex: search, $options: "i" } },
+      { position: { $regex: search, $options: "i" } },
+    ];
   }
+
   if (status) {
-    conditions.push(eq(candidatesTable.status, status));
+    query.status = status;
   }
 
-  const where = conditions.length > 0 ? and(...conditions) : undefined;
+  let sortField = "createdAt";
 
-  const sortColumn =
-    sortBy === "name"
-      ? candidatesTable.name
-      : sortBy === "updatedAt"
-        ? candidatesTable.updatedAt
-        : sortBy === "yearsOfExperience"
-          ? candidatesTable.yearsOfExperience
-          : candidatesTable.createdAt;
+  switch (sortBy) {
+    case "name":
+      sortField = "name";
+      break;
 
-  const orderFn = sortOrder === "asc" ? asc : desc;
+    case "updatedAt":
+      sortField = "updatedAt";
+      break;
 
-  const [rows, [{ total }]] = await Promise.all([
-    db
-      .select()
-      .from(candidatesTable)
-      .where(where)
-      .orderBy(orderFn(sortColumn))
-      .limit(pageLimit)
-      .offset(offset),
-    db.select({ total: count() }).from(candidatesTable).where(where),
+    case "yearsOfExperience":
+      sortField = "yearsOfExperience";
+      break;
+  }
+
+  const sort: any = {
+    [sortField]: sortOrder === "asc" ? 1 : -1,
+  };
+
+  const [rows, total] = await Promise.all([
+    Candidate.find(query)
+      .sort(sort)
+      .skip((page - 1) * limit)
+      .limit(limit),
+
+    Candidate.countDocuments(query),
   ]);
 
-  const totalNum = Number(total);
   res.json({
     data: rows.map(serializeCandidate),
-    total: totalNum,
-    page: page ?? 1,
-    limit: pageLimit,
-    totalPages: Math.ceil(totalNum / pageLimit),
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit),
   });
 });
 
 router.post("/candidates", requireAuth, async (req, res): Promise<void> => {
   const parsed = CreateCandidateBody.safeParse(req.body);
+
   if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.message });
+    res.status(400).json({
+      error: parsed.error.message,
+    });
     return;
   }
 
   const { skills, status, ...rest } = parsed.data;
-  const [candidate] = await db
-    .insert(candidatesTable)
-    .values({ ...rest, skills: skills ?? [], status: status ?? "applied" })
-    .returning();
 
-  await db.insert(activityLogsTable).values({
-    candidateId: candidate.id,
+  const candidate = await Candidate.create({
+    ...rest,
+    skills: skills ?? [],
+    status: status ?? "applied",
+  });
+
+  await Activity.create({
+    candidateId: candidate._id,
     candidateName: candidate.name,
     action: "Candidate added",
     newValue: candidate.status,
@@ -101,32 +171,35 @@ router.post("/candidates", requireAuth, async (req, res): Promise<void> => {
 
 router.get("/candidates/:id", requireAuth, async (req, res): Promise<void> => {
   const params = GetCandidateParams.safeParse(req.params);
+
   if (!params.success) {
-    res.status(400).json({ error: params.error.message });
+    res.status(400).json({
+      error: params.error.message,
+    });
     return;
   }
 
-  const [candidate] = await db
-    .select()
-    .from(candidatesTable)
-    .where(eq(candidatesTable.id, params.data.id));
+  const candidate = await Candidate.findById(params.data.id);
 
   if (!candidate) {
-    res.status(404).json({ error: "Candidate not found" });
+    res.status(404).json({
+      error: "Candidate not found",
+    });
     return;
   }
 
   const [notes, activityLogs] = await Promise.all([
-    db
-      .select()
-      .from(notesTable)
-      .where(eq(notesTable.candidateId, candidate.id))
-      .orderBy(desc(notesTable.createdAt)),
-    db
-      .select()
-      .from(activityLogsTable)
-      .where(eq(activityLogsTable.candidateId, candidate.id))
-      .orderBy(desc(activityLogsTable.createdAt)),
+    Note.find({
+      candidateId: candidate._id as any,
+    }).sort({
+      createdAt: -1,
+    }),
+
+    Activity.find({
+      candidateId: candidate._id,
+    }).sort({
+      createdAt: -1,
+    }),
   ]);
 
   res.json({
@@ -136,193 +209,216 @@ router.get("/candidates/:id", requireAuth, async (req, res): Promise<void> => {
   });
 });
 
-router.patch("/candidates/:id", requireAuth, async (req, res): Promise<void> => {
-  const params = UpdateCandidateParams.safeParse(req.params);
-  if (!params.success) {
-    res.status(400).json({ error: params.error.message });
-    return;
-  }
+router.patch(
+  "/candidates/:id",
+  requireAuth,
+  async (req, res): Promise<void> => {
+    const params = UpdateCandidateParams.safeParse(req.params);
 
-  const parsed = UpdateCandidateBody.safeParse(req.body);
-  if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.message });
-    return;
-  }
+    if (!params.success) {
+      res.status(400).json({ error: params.error.message });
+      return;
+    }
 
-  const [existing] = await db
-    .select()
-    .from(candidatesTable)
-    .where(eq(candidatesTable.id, params.data.id));
+    const parsed = UpdateCandidateBody.safeParse(req.body);
 
-  if (!existing) {
-    res.status(404).json({ error: "Candidate not found" });
-    return;
-  }
+    if (!parsed.success) {
+      res.status(400).json({ error: parsed.error.message });
+      return;
+    }
 
-  const [candidate] = await db
-    .update(candidatesTable)
-    .set(parsed.data)
-    .where(eq(candidatesTable.id, params.data.id))
-    .returning();
+    const existing = await Candidate.findById(params.data.id);
 
-  if (parsed.data.status && parsed.data.status !== existing.status) {
-    await db.insert(activityLogsTable).values({
-      candidateId: candidate.id,
-      candidateName: candidate.name,
+    if (!existing) {
+      res.status(404).json({ error: "Candidate not found" });
+      return;
+    }
+
+    const candidate = await Candidate.findByIdAndUpdate(
+      params.data.id,
+      parsed.data,
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    if (!candidate) {
+      res.status(404).json({ error: "Candidate not found" });
+      return;
+    }
+
+    if (parsed.data.status && parsed.data.status !== existing.status) {
+      await Activity.create({
+        candidateId: candidate._id,
+        candidateName: candidate.name,
+        action: "Status changed",
+        oldValue: existing.status,
+        newValue: parsed.data.status,
+      });
+    } else if (parsed.data.name || parsed.data.email) {
+      await Activity.create({
+        candidateId: candidate._id,
+        candidateName: candidate.name,
+        action: "Profile updated",
+      });
+    }
+
+    res.json(serializeCandidate(candidate));
+  },
+);
+
+router.delete(
+  "/candidates/:id",
+  requireAuth,
+  async (req, res): Promise<void> => {
+    const params = DeleteCandidateParams.safeParse(req.params);
+
+    if (!params.success) {
+      res.status(400).json({
+        error: params.error.message,
+      });
+      return;
+    }
+
+    const candidate = await Candidate.findByIdAndDelete(params.data.id);
+
+    if (!candidate) {
+      res.status(404).json({
+        error: "Candidate not found",
+      });
+      return;
+    }
+
+    await Promise.all([
+      Note.deleteMany({
+        candidateId: candidate._id as any,
+      }),
+
+      Activity.deleteMany({
+        candidateId: candidate._id,
+      }),
+    ]);
+
+    res.sendStatus(204);
+  },
+);
+
+router.patch(
+  "/candidates/:id/status",
+  requireAuth,
+  async (req, res): Promise<void> => {
+    const params = UpdateCandidateStatusParams.safeParse(req.params);
+
+    if (!params.success) {
+      res.status(400).json({
+        error: params.error.message,
+      });
+      return;
+    }
+
+    const parsed = UpdateCandidateStatusBody.safeParse(req.body);
+
+    if (!parsed.success) {
+      res.status(400).json({
+        error: parsed.error.message,
+      });
+      return;
+    }
+
+    const existing = await Candidate.findById(params.data.id);
+
+    if (!existing) {
+      res.status(404).json({
+        error: "Candidate not found",
+      });
+      return;
+    }
+
+    existing.status = parsed.data.status;
+
+    await existing.save();
+
+    await Activity.create({
+      candidateId: existing._id,
+      candidateName: existing.name,
       action: "Status changed",
       oldValue: existing.status,
       newValue: parsed.data.status,
     });
-  } else if (parsed.data.name || parsed.data.email) {
-    await db.insert(activityLogsTable).values({
-      candidateId: candidate.id,
-      candidateName: candidate.name,
-      action: "Profile updated",
-    });
-  }
 
-  res.json(serializeCandidate(candidate));
-});
+    res.json(serializeCandidate(existing));
+  },
+);
 
-router.delete("/candidates/:id", requireAuth, async (req, res): Promise<void> => {
-  const params = DeleteCandidateParams.safeParse(req.params);
-  if (!params.success) {
-    res.status(400).json({ error: params.error.message });
-    return;
-  }
+router.get(
+  "/candidates/:candidateId/notes",
+  requireAuth,
+  async (req, res): Promise<void> => {
+    const params = ListCandidateNotesParams.safeParse(req.params);
 
-  const [candidate] = await db
-    .delete(candidatesTable)
-    .where(eq(candidatesTable.id, params.data.id))
-    .returning();
+    if (!params.success) {
+      res.status(400).json({
+        error: params.error.message,
+      });
+      return;
+    }
 
-  if (!candidate) {
-    res.status(404).json({ error: "Candidate not found" });
-    return;
-  }
-
-  res.sendStatus(204);
-});
-
-router.patch("/candidates/:id/status", requireAuth, async (req, res): Promise<void> => {
-  const params = UpdateCandidateStatusParams.safeParse(req.params);
-  if (!params.success) {
-    res.status(400).json({ error: params.error.message });
-    return;
-  }
-
-  const parsed = UpdateCandidateStatusBody.safeParse(req.body);
-  if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.message });
-    return;
-  }
-
-  const [existing] = await db
-    .select()
-    .from(candidatesTable)
-    .where(eq(candidatesTable.id, params.data.id));
-
-  if (!existing) {
-    res.status(404).json({ error: "Candidate not found" });
-    return;
-  }
-
-  const [candidate] = await db
-    .update(candidatesTable)
-    .set({ status: parsed.data.status })
-    .where(eq(candidatesTable.id, params.data.id))
-    .returning();
-
-  await db.insert(activityLogsTable).values({
-    candidateId: candidate.id,
-    candidateName: candidate.name,
-    action: "Status changed",
-    oldValue: existing.status,
-    newValue: parsed.data.status,
-  });
-
-  res.json(serializeCandidate(candidate));
-});
-
-router.get("/candidates/:candidateId/notes", requireAuth, async (req, res): Promise<void> => {
-  const params = ListCandidateNotesParams.safeParse(req.params);
-  if (!params.success) {
-    res.status(400).json({ error: params.error.message });
-    return;
-  }
-
-  const notes = await db
-    .select()
-    .from(notesTable)
-    .where(eq(notesTable.candidateId, params.data.candidateId))
-    .orderBy(desc(notesTable.createdAt));
-
-  res.json(notes.map(serializeNote));
-});
-
-router.post("/candidates/:candidateId/notes", requireAuth, async (req, res): Promise<void> => {
-  const params = CreateCandidateNoteParams.safeParse(req.params);
-  if (!params.success) {
-    res.status(400).json({ error: params.error.message });
-    return;
-  }
-
-  const parsed = CreateCandidateNoteBody.safeParse(req.body);
-  if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.message });
-    return;
-  }
-
-  const [candidate] = await db
-    .select()
-    .from(candidatesTable)
-    .where(eq(candidatesTable.id, params.data.candidateId));
-
-  if (!candidate) {
-    res.status(404).json({ error: "Candidate not found" });
-    return;
-  }
-
-  const [note] = await db
-    .insert(notesTable)
-    .values({
+    const notes = await Note.find({
       candidateId: params.data.candidateId,
+    }).sort({
+      createdAt: -1,
+    });
+
+    res.json(notes.map(serializeNote));
+  },
+);
+
+router.post(
+  "/candidates/:candidateId/notes",
+  requireAuth,
+  async (req, res): Promise<void> => {
+    const params = CreateCandidateNoteParams.safeParse(req.params);
+
+    if (!params.success) {
+      res.status(400).json({
+        error: params.error.message,
+      });
+      return;
+    }
+
+    const parsed = CreateCandidateNoteBody.safeParse(req.body);
+
+    if (!parsed.success) {
+      res.status(400).json({
+        error: parsed.error.message,
+      });
+      return;
+    }
+
+    const candidate = await Candidate.findById(params.data.candidateId);
+
+    if (!candidate) {
+      res.status(404).json({
+        error: "Candidate not found",
+      });
+      return;
+    }
+
+    const note = await Note.create({
+      candidateId: candidate._id as any,
       content: parsed.data.content,
       authorName: parsed.data.authorName,
-    })
-    .returning();
+    });
 
-  await db.insert(activityLogsTable).values({
-    candidateId: candidate.id,
-    candidateName: candidate.name,
-    action: `Note added by ${parsed.data.authorName}`,
-  });
+    await Activity.create({
+      candidateId: candidate._id,
+      candidateName: candidate.name,
+      action: `Note added by ${parsed.data.authorName}`,
+    });
 
-  res.status(201).json(serializeNote(note));
-});
-
-export function serializeCandidate(c: typeof candidatesTable.$inferSelect) {
-  return {
-    ...c,
-    skills: c.skills ?? [],
-    createdAt: c.createdAt.toISOString(),
-    updatedAt: c.updatedAt.toISOString(),
-  };
-}
-
-export function serializeNote(n: typeof notesTable.$inferSelect) {
-  return {
-    ...n,
-    createdAt: n.createdAt.toISOString(),
-    updatedAt: n.updatedAt.toISOString(),
-  };
-}
-
-export function serializeActivity(a: typeof activityLogsTable.$inferSelect) {
-  return {
-    ...a,
-    createdAt: a.createdAt.toISOString(),
-  };
-}
+    res.status(201).json(serializeNote(note));
+  },
+);
 
 export default router;

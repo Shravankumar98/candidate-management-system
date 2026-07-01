@@ -13,8 +13,7 @@ import {
 import { Link } from "wouter";
 import { setStoredAuthToken, setStoredAuthUser } from "@/lib/auth-storage";
 
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
-
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function SignInPage() {
   const [, setLocation] = useLocation();
@@ -29,7 +28,7 @@ export default function SignInPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${basePath}/api/auth/login`, {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -49,7 +48,6 @@ export default function SignInPage() {
       setIsSubmitting(false);
     }
   };
-console.log("gunna", basePath);
 
   return (
     <div className="min-h-[100dvh] flex items-center justify-center bg-background px-4">

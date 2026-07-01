@@ -209,11 +209,11 @@ export declare const CreateCandidateResponse: zod.ZodObject<{
  * @summary Get a candidate by ID
  */
 export declare const GetCandidateParams: zod.ZodObject<{
-    id: zod.ZodNumber;
+    id: zod.ZodString;
 }, "strip", zod.ZodTypeAny, {
-    id: number;
+    id: string;
 }, {
-    id: number;
+    id: string;
 }>;
 export declare const GetCandidateResponse: zod.ZodObject<{
     id: zod.ZodNumber;
@@ -230,7 +230,7 @@ export declare const GetCandidateResponse: zod.ZodObject<{
     updatedAt: zod.ZodDate;
     notes: zod.ZodArray<zod.ZodObject<{
         id: zod.ZodNumber;
-        candidateId: zod.ZodNumber;
+        candidateId: zod.ZodString;
         content: zod.ZodString;
         authorName: zod.ZodString;
         createdAt: zod.ZodDate;
@@ -239,20 +239,20 @@ export declare const GetCandidateResponse: zod.ZodObject<{
         createdAt: Date;
         updatedAt: Date;
         id: number;
-        candidateId: number;
+        candidateId: string;
         content: string;
         authorName: string;
     }, {
         createdAt: Date;
         updatedAt: Date;
         id: number;
-        candidateId: number;
+        candidateId: string;
         content: string;
         authorName: string;
     }>, "many">;
     activityLogs: zod.ZodArray<zod.ZodObject<{
         id: zod.ZodNumber;
-        candidateId: zod.ZodNumber;
+        candidateId: zod.ZodString;
         candidateName: zod.ZodString;
         action: zod.ZodString;
         oldValue: zod.ZodOptional<zod.ZodNullable<zod.ZodString>>;
@@ -261,7 +261,7 @@ export declare const GetCandidateResponse: zod.ZodObject<{
     }, "strip", zod.ZodTypeAny, {
         createdAt: Date;
         id: number;
-        candidateId: number;
+        candidateId: string;
         candidateName: string;
         action: string;
         oldValue?: string | null | undefined;
@@ -269,7 +269,7 @@ export declare const GetCandidateResponse: zod.ZodObject<{
     }, {
         createdAt: Date;
         id: number;
-        candidateId: number;
+        candidateId: string;
         candidateName: string;
         action: string;
         oldValue?: string | null | undefined;
@@ -286,14 +286,14 @@ export declare const GetCandidateResponse: zod.ZodObject<{
         createdAt: Date;
         updatedAt: Date;
         id: number;
-        candidateId: number;
+        candidateId: string;
         content: string;
         authorName: string;
     }[];
     activityLogs: {
         createdAt: Date;
         id: number;
-        candidateId: number;
+        candidateId: string;
         candidateName: string;
         action: string;
         oldValue?: string | null | undefined;
@@ -316,14 +316,14 @@ export declare const GetCandidateResponse: zod.ZodObject<{
         createdAt: Date;
         updatedAt: Date;
         id: number;
-        candidateId: number;
+        candidateId: string;
         content: string;
         authorName: string;
     }[];
     activityLogs: {
         createdAt: Date;
         id: number;
-        candidateId: number;
+        candidateId: string;
         candidateName: string;
         action: string;
         oldValue?: string | null | undefined;
@@ -340,11 +340,11 @@ export declare const GetCandidateResponse: zod.ZodObject<{
  * @summary Update a candidate
  */
 export declare const UpdateCandidateParams: zod.ZodObject<{
-    id: zod.ZodNumber;
+    id: zod.ZodString;
 }, "strip", zod.ZodTypeAny, {
-    id: number;
+    id: string;
 }, {
-    id: number;
+    id: string;
 }>;
 export declare const updateCandidateBodyYearsOfExperienceMin = 0;
 export declare const UpdateCandidateBody: zod.ZodObject<{
@@ -422,22 +422,22 @@ export declare const UpdateCandidateResponse: zod.ZodObject<{
  * @summary Delete a candidate
  */
 export declare const DeleteCandidateParams: zod.ZodObject<{
-    id: zod.ZodNumber;
+    id: zod.ZodString;
 }, "strip", zod.ZodTypeAny, {
-    id: number;
+    id: string;
 }, {
-    id: number;
+    id: string;
 }>;
 export declare const DeleteCandidateResponse: zod.ZodVoid;
 /**
  * @summary Update candidate status (Kanban move)
  */
 export declare const UpdateCandidateStatusParams: zod.ZodObject<{
-    id: zod.ZodNumber;
+    id: zod.ZodString;
 }, "strip", zod.ZodTypeAny, {
-    id: number;
+    id: string;
 }, {
-    id: number;
+    id: string;
 }>;
 export declare const UpdateCandidateStatusBody: zod.ZodObject<{
     status: zod.ZodEnum<["applied", "screening", "interview", "offer", "selected", "rejected"]>;
@@ -490,15 +490,15 @@ export declare const UpdateCandidateStatusResponse: zod.ZodObject<{
  * @summary List notes for a candidate
  */
 export declare const ListCandidateNotesParams: zod.ZodObject<{
-    candidateId: zod.ZodNumber;
+    candidateId: zod.ZodString;
 }, "strip", zod.ZodTypeAny, {
-    candidateId: number;
+    candidateId: string;
 }, {
-    candidateId: number;
+    candidateId: string;
 }>;
 export declare const ListCandidateNotesResponseItem: zod.ZodObject<{
     id: zod.ZodNumber;
-    candidateId: zod.ZodNumber;
+    candidateId: zod.ZodString;
     content: zod.ZodString;
     authorName: zod.ZodString;
     createdAt: zod.ZodDate;
@@ -507,20 +507,20 @@ export declare const ListCandidateNotesResponseItem: zod.ZodObject<{
     createdAt: Date;
     updatedAt: Date;
     id: number;
-    candidateId: number;
+    candidateId: string;
     content: string;
     authorName: string;
 }, {
     createdAt: Date;
     updatedAt: Date;
     id: number;
-    candidateId: number;
+    candidateId: string;
     content: string;
     authorName: string;
 }>;
 export declare const ListCandidateNotesResponse: zod.ZodArray<zod.ZodObject<{
     id: zod.ZodNumber;
-    candidateId: zod.ZodNumber;
+    candidateId: zod.ZodString;
     content: zod.ZodString;
     authorName: zod.ZodString;
     createdAt: zod.ZodDate;
@@ -529,14 +529,14 @@ export declare const ListCandidateNotesResponse: zod.ZodArray<zod.ZodObject<{
     createdAt: Date;
     updatedAt: Date;
     id: number;
-    candidateId: number;
+    candidateId: string;
     content: string;
     authorName: string;
 }, {
     createdAt: Date;
     updatedAt: Date;
     id: number;
-    candidateId: number;
+    candidateId: string;
     content: string;
     authorName: string;
 }>, "many">;
@@ -544,11 +544,11 @@ export declare const ListCandidateNotesResponse: zod.ZodArray<zod.ZodObject<{
  * @summary Create a note for a candidate
  */
 export declare const CreateCandidateNoteParams: zod.ZodObject<{
-    candidateId: zod.ZodNumber;
+    candidateId: zod.ZodString;
 }, "strip", zod.ZodTypeAny, {
-    candidateId: number;
+    candidateId: string;
 }, {
-    candidateId: number;
+    candidateId: string;
 }>;
 export declare const CreateCandidateNoteBody: zod.ZodObject<{
     content: zod.ZodString;
@@ -562,7 +562,7 @@ export declare const CreateCandidateNoteBody: zod.ZodObject<{
 }>;
 export declare const CreateCandidateNoteResponse: zod.ZodObject<{
     id: zod.ZodNumber;
-    candidateId: zod.ZodNumber;
+    candidateId: zod.ZodString;
     content: zod.ZodString;
     authorName: zod.ZodString;
     createdAt: zod.ZodDate;
@@ -571,14 +571,14 @@ export declare const CreateCandidateNoteResponse: zod.ZodObject<{
     createdAt: Date;
     updatedAt: Date;
     id: number;
-    candidateId: number;
+    candidateId: string;
     content: string;
     authorName: string;
 }, {
     createdAt: Date;
     updatedAt: Date;
     id: number;
-    candidateId: number;
+    candidateId: string;
     content: string;
     authorName: string;
 }>;
@@ -586,11 +586,11 @@ export declare const CreateCandidateNoteResponse: zod.ZodObject<{
  * @summary Update a note
  */
 export declare const UpdateNoteParams: zod.ZodObject<{
-    id: zod.ZodNumber;
+    id: zod.ZodString;
 }, "strip", zod.ZodTypeAny, {
-    id: number;
+    id: string;
 }, {
-    id: number;
+    id: string;
 }>;
 export declare const UpdateNoteBody: zod.ZodObject<{
     content: zod.ZodString;
@@ -601,7 +601,7 @@ export declare const UpdateNoteBody: zod.ZodObject<{
 }>;
 export declare const UpdateNoteResponse: zod.ZodObject<{
     id: zod.ZodNumber;
-    candidateId: zod.ZodNumber;
+    candidateId: zod.ZodString;
     content: zod.ZodString;
     authorName: zod.ZodString;
     createdAt: zod.ZodDate;
@@ -610,14 +610,14 @@ export declare const UpdateNoteResponse: zod.ZodObject<{
     createdAt: Date;
     updatedAt: Date;
     id: number;
-    candidateId: number;
+    candidateId: string;
     content: string;
     authorName: string;
 }, {
     createdAt: Date;
     updatedAt: Date;
     id: number;
-    candidateId: number;
+    candidateId: string;
     content: string;
     authorName: string;
 }>;
@@ -625,11 +625,11 @@ export declare const UpdateNoteResponse: zod.ZodObject<{
  * @summary Delete a note
  */
 export declare const DeleteNoteParams: zod.ZodObject<{
-    id: zod.ZodNumber;
+    id: zod.ZodString;
 }, "strip", zod.ZodTypeAny, {
-    id: number;
+    id: string;
 }, {
-    id: number;
+    id: string;
 }>;
 export declare const DeleteNoteResponse: zod.ZodVoid;
 /**
@@ -701,7 +701,7 @@ export declare const GetDashboardResponse: zod.ZodObject<{
     }>, "many">;
     recentActivity: zod.ZodArray<zod.ZodObject<{
         id: zod.ZodNumber;
-        candidateId: zod.ZodNumber;
+        candidateId: zod.ZodString;
         candidateName: zod.ZodString;
         action: zod.ZodString;
         oldValue: zod.ZodOptional<zod.ZodNullable<zod.ZodString>>;
@@ -710,7 +710,7 @@ export declare const GetDashboardResponse: zod.ZodObject<{
     }, "strip", zod.ZodTypeAny, {
         createdAt: Date;
         id: number;
-        candidateId: number;
+        candidateId: string;
         candidateName: string;
         action: string;
         oldValue?: string | null | undefined;
@@ -718,7 +718,7 @@ export declare const GetDashboardResponse: zod.ZodObject<{
     }, {
         createdAt: Date;
         id: number;
-        candidateId: number;
+        candidateId: string;
         candidateName: string;
         action: string;
         oldValue?: string | null | undefined;
@@ -751,7 +751,7 @@ export declare const GetDashboardResponse: zod.ZodObject<{
     recentActivity: {
         createdAt: Date;
         id: number;
-        candidateId: number;
+        candidateId: string;
         candidateName: string;
         action: string;
         oldValue?: string | null | undefined;
@@ -784,7 +784,7 @@ export declare const GetDashboardResponse: zod.ZodObject<{
     recentActivity: {
         createdAt: Date;
         id: number;
-        candidateId: number;
+        candidateId: string;
         candidateName: string;
         action: string;
         oldValue?: string | null | undefined;
@@ -797,17 +797,17 @@ export declare const GetDashboardResponse: zod.ZodObject<{
 export declare const listActivityQueryLimitDefault = 20;
 export declare const ListActivityQueryParams: zod.ZodObject<{
     limit: zod.ZodDefault<zod.ZodNumber>;
-    candidateId: zod.ZodOptional<zod.ZodNumber>;
+    candidateId: zod.ZodOptional<zod.ZodString>;
 }, "strip", zod.ZodTypeAny, {
     limit: number;
-    candidateId?: number | undefined;
+    candidateId?: string | undefined;
 }, {
     limit?: number | undefined;
-    candidateId?: number | undefined;
+    candidateId?: string | undefined;
 }>;
 export declare const ListActivityResponseItem: zod.ZodObject<{
     id: zod.ZodNumber;
-    candidateId: zod.ZodNumber;
+    candidateId: zod.ZodString;
     candidateName: zod.ZodString;
     action: zod.ZodString;
     oldValue: zod.ZodOptional<zod.ZodNullable<zod.ZodString>>;
@@ -816,7 +816,7 @@ export declare const ListActivityResponseItem: zod.ZodObject<{
 }, "strip", zod.ZodTypeAny, {
     createdAt: Date;
     id: number;
-    candidateId: number;
+    candidateId: string;
     candidateName: string;
     action: string;
     oldValue?: string | null | undefined;
@@ -824,7 +824,7 @@ export declare const ListActivityResponseItem: zod.ZodObject<{
 }, {
     createdAt: Date;
     id: number;
-    candidateId: number;
+    candidateId: string;
     candidateName: string;
     action: string;
     oldValue?: string | null | undefined;
@@ -832,7 +832,7 @@ export declare const ListActivityResponseItem: zod.ZodObject<{
 }>;
 export declare const ListActivityResponse: zod.ZodArray<zod.ZodObject<{
     id: zod.ZodNumber;
-    candidateId: zod.ZodNumber;
+    candidateId: zod.ZodString;
     candidateName: zod.ZodString;
     action: zod.ZodString;
     oldValue: zod.ZodOptional<zod.ZodNullable<zod.ZodString>>;
@@ -841,7 +841,7 @@ export declare const ListActivityResponse: zod.ZodArray<zod.ZodObject<{
 }, "strip", zod.ZodTypeAny, {
     createdAt: Date;
     id: number;
-    candidateId: number;
+    candidateId: string;
     candidateName: string;
     action: string;
     oldValue?: string | null | undefined;
@@ -849,7 +849,7 @@ export declare const ListActivityResponse: zod.ZodArray<zod.ZodObject<{
 }, {
     createdAt: Date;
     id: number;
-    candidateId: number;
+    candidateId: string;
     candidateName: string;
     action: string;
     oldValue?: string | null | undefined;

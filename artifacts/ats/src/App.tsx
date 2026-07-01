@@ -32,7 +32,7 @@ import LandingPage from "./pages/LandingPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import NotFound from "./pages/not-found";
-import { setAuthTokenGetter } from "@workspace/api-client-react";
+import { setAuthTokenGetter, setBaseUrl } from "@workspace/api-client-react";
 import {
   clearStoredAuth,
   getStoredAuthToken,
@@ -81,7 +81,11 @@ function AuthTokenInitializer() {
     },
     [setLocation],
   );
+  useEffect(() => {
+    setBaseUrl(import.meta.env.VITE_API_URL);
 
+    return () => setBaseUrl(null);
+  }, []);
   useLayoutEffect(() => {
     syncAuth(getStoredAuthToken());
     return () => setAuthTokenGetter(null);
@@ -219,7 +223,7 @@ function AppProviders() {
           <Route path="/" component={HomeRoute} />
           <Route path="/sign-in/" component={SignInPage} />
           <Route path="/sign-up/" component={SignUpPage} />
-          <Route path="/" component={ProtectedApp} />
+          <Route component={ProtectedApp} />
         </Switch>
         <Toaster />
       </TooltipProvider>

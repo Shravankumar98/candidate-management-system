@@ -114,14 +114,14 @@ export default function CandidateList() {
                     <TableCell><Skeleton className="h-8 w-8 ml-auto rounded" /></TableCell>
                   </TableRow>
                 ))
-              ) : !data || data.data.length === 0 ? (
+              ) : !data || data?.data?.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="h-40 text-center text-muted-foreground">
                     No candidates found.
                   </TableCell>
                 </TableRow>
               ) : (
-                data.data.map((candidate) => (
+                data?.data?.map((candidate) => (
                   <TableRow key={candidate.id} className="group hover:bg-muted/30">
                     <TableCell>
                       <div className="font-medium text-foreground">{candidate.name}</div>

@@ -96,7 +96,7 @@ export const CreateCandidateResponse = zod.object({
  * @summary Get a candidate by ID
  */
 export const GetCandidateParams = zod.object({
-  "id": zod.coerce.number()
+  "id": zod.coerce.string()
 })
 
 export const GetCandidateResponse = zod.object({
@@ -114,7 +114,7 @@ export const GetCandidateResponse = zod.object({
   "updatedAt": zod.coerce.date(),
   "notes": zod.array(zod.object({
   "id": zod.number(),
-  "candidateId": zod.number(),
+  "candidateId": zod.string(),
   "content": zod.string(),
   "authorName": zod.string(),
   "createdAt": zod.coerce.date(),
@@ -122,7 +122,7 @@ export const GetCandidateResponse = zod.object({
 })),
   "activityLogs": zod.array(zod.object({
   "id": zod.number(),
-  "candidateId": zod.number(),
+  "candidateId": zod.string(),
   "candidateName": zod.string(),
   "action": zod.string(),
   "oldValue": zod.string().nullish(),
@@ -136,7 +136,7 @@ export const GetCandidateResponse = zod.object({
  * @summary Update a candidate
  */
 export const UpdateCandidateParams = zod.object({
-  "id": zod.coerce.number()
+  "id": zod.coerce.string()
 })
 
 
@@ -176,7 +176,7 @@ export const UpdateCandidateResponse = zod.object({
  * @summary Delete a candidate
  */
 export const DeleteCandidateParams = zod.object({
-  "id": zod.coerce.number()
+  "id": zod.coerce.string()
 })
 
 export const DeleteCandidateResponse = zod.void()
@@ -186,7 +186,7 @@ export const DeleteCandidateResponse = zod.void()
  * @summary Update candidate status (Kanban move)
  */
 export const UpdateCandidateStatusParams = zod.object({
-  "id": zod.coerce.number()
+  "id": zod.coerce.string()
 })
 
 export const UpdateCandidateStatusBody = zod.object({
@@ -213,12 +213,12 @@ export const UpdateCandidateStatusResponse = zod.object({
  * @summary List notes for a candidate
  */
 export const ListCandidateNotesParams = zod.object({
-  "candidateId": zod.coerce.number()
+  "candidateId": zod.coerce.string()
 })
 
 export const ListCandidateNotesResponseItem = zod.object({
   "id": zod.number(),
-  "candidateId": zod.number(),
+  "candidateId": zod.string(),
   "content": zod.string(),
   "authorName": zod.string(),
   "createdAt": zod.coerce.date(),
@@ -231,7 +231,7 @@ export const ListCandidateNotesResponse = zod.array(ListCandidateNotesResponseIt
  * @summary Create a note for a candidate
  */
 export const CreateCandidateNoteParams = zod.object({
-  "candidateId": zod.coerce.number()
+  "candidateId": zod.coerce.string()
 })
 
 
@@ -245,7 +245,7 @@ export const CreateCandidateNoteBody = zod.object({
 
 export const CreateCandidateNoteResponse = zod.object({
   "id": zod.number(),
-  "candidateId": zod.number(),
+  "candidateId": zod.string(),
   "content": zod.string(),
   "authorName": zod.string(),
   "createdAt": zod.coerce.date(),
@@ -257,7 +257,7 @@ export const CreateCandidateNoteResponse = zod.object({
  * @summary Update a note
  */
 export const UpdateNoteParams = zod.object({
-  "id": zod.coerce.number()
+  "id": zod.coerce.string()
 })
 
 
@@ -269,7 +269,7 @@ export const UpdateNoteBody = zod.object({
 
 export const UpdateNoteResponse = zod.object({
   "id": zod.number(),
-  "candidateId": zod.number(),
+  "candidateId": zod.string(),
   "content": zod.string(),
   "authorName": zod.string(),
   "createdAt": zod.coerce.date(),
@@ -281,7 +281,7 @@ export const UpdateNoteResponse = zod.object({
  * @summary Delete a note
  */
 export const DeleteNoteParams = zod.object({
-  "id": zod.coerce.number()
+  "id": zod.coerce.string()
 })
 
 export const DeleteNoteResponse = zod.void()
@@ -316,7 +316,7 @@ export const GetDashboardResponse = zod.object({
 })),
   "recentActivity": zod.array(zod.object({
   "id": zod.number(),
-  "candidateId": zod.number(),
+  "candidateId": zod.string(),
   "candidateName": zod.string(),
   "action": zod.string(),
   "oldValue": zod.string().nullish(),
@@ -333,12 +333,12 @@ export const listActivityQueryLimitDefault = 20;
 
 export const ListActivityQueryParams = zod.object({
   "limit": zod.coerce.number().default(listActivityQueryLimitDefault),
-  "candidateId": zod.coerce.number().optional()
+  "candidateId": zod.coerce.string().optional()
 })
 
 export const ListActivityResponseItem = zod.object({
   "id": zod.number(),
-  "candidateId": zod.number(),
+  "candidateId": zod.string(),
   "candidateName": zod.string(),
   "action": zod.string(),
   "oldValue": zod.string().nullish(),
