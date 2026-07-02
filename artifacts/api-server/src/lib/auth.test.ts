@@ -17,7 +17,6 @@ test("createAuthToken returns unsigned payload", () => {
       name: "Recruiter",
       role: "recruiter",
     },
-    "1h",
   );
   assert.match(token, /^eyJ/);
 });
